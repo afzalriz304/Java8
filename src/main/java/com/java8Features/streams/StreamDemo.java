@@ -2,11 +2,13 @@ package com.java8Features.streams;
 
 import com.java8Features.enums.OrderStatus;
 import com.java8Features.enums.ProductCategory;
+import com.java8Features.models.ecommerce.Order;
 import com.java8Features.models.ecommerce.Product;
 import com.java8Features.streams.ecommerce.serviceImpl.EcommerceServiceImpl;
 import com.java8Features.utils.StreamUtil;
 
 import java.util.Arrays;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,7 +23,8 @@ public class StreamDemo {
 
     public static void main(String[] args) {
         StreamDemo streamDemo = new StreamDemo();
-        StreamUtil<Product> util = new StreamUtil();
+        StreamUtil<Product> productStreamUtil = new StreamUtil();
+        StreamUtil<Order> orderStreamUtil = new StreamUtil();
 
         /**
          * --------------------------FILTER--------------------------------
@@ -30,7 +33,7 @@ public class StreamDemo {
         System.out.println("Obtain a list of products belongs to category “Cloth” with price <= 1500");
         List<Product> list0 = streamDemo.ecommerceService
                 .fetchProductByCategoryAndPrice(ProductCategory.CLOTH, 1500);
-        util.print(list0);
+        productStreamUtil.print(list0);
 
         /**
          *--------------------------MAP--------------------------------
@@ -48,7 +51,7 @@ public class StreamDemo {
         System.out.println("Obtain a list of product with category = “Cloth” and then apply 10% discount");
         List<Product> list3 = streamDemo.ecommerceService
                 .fetchProductByCategoryAndApplyDiscount(ProductCategory.CLOTH, 10);
-        util.print(list3);
+        productStreamUtil.print(list3);
 
         /**
          * --------------------------FLAT MAP---------------------------
@@ -71,7 +74,7 @@ public class StreamDemo {
          */
         System.out.println("Obtain a list of products ordered by customer of tier 2");
         List<Product> listOfProductForTier2 = streamDemo.ecommerceService.fetchProductsFromOrderListByTier(2);
-        util.print(listOfProductForTier2);
+        productStreamUtil.print(listOfProductForTier2);
 
         /**
          * ------------------distinct
@@ -91,20 +94,57 @@ public class StreamDemo {
         System.out.println(cheapestProduct);
 
         /**
+         * -----------------------max---------------------------
+         * Exercise 7 -> Obtain the cheapest Product from product list
+         */
+        System.out.println("Obtain the highest price Product from product list");
+        Optional<Product> highPriceProduct = streamDemo.ecommerceService.fetchHighestPriceProductFromList();
+        System.out.println(highPriceProduct);
+
+        /**
          * -----------------------Sorted---------------------------
-         * Exercise 7 -> Obtain Products sorted by price
+         * Exercise 9 -> Obtain Products sorted by price
          */
         System.out.println("Obtain the cheapest Product from product list");
         List<Product> sortedList = streamDemo.ecommerceService.sortProductByPrice();
-        util.print(sortedList);
+        productStreamUtil.print(sortedList);
 
         /**
          * --------------------peek------------------
-         * Exercise 8 -> fetch order name along with its product list
+         * Exercise 10 -> fetch order name along with its product list
          */
         System.out.println("fetch order name along with its product list");
         streamDemo.ecommerceService.fetchProductListFromOrderByOrderStatus(OrderStatus.PLACED);
 
+
+        /**
+         * --------------------anyMatch------------------
+         * Exercise 12 -> Check if any product belong to product category of beauty
+         */
+        boolean result = streamDemo.ecommerceService.isProductCategoryPresent(ProductCategory.BEAUTY);
+        System.out.println("Check if any product belong to product category of cloth : " + result);
+
+        /**
+         * --------------------anyMatch------------------
+         * Exercise 13 -> fetch orders belong to product category of cloth
+         */
+        System.out.println("fetch orders belong to product category of cloth");
+        List<Order> orderList = streamDemo.ecommerceService.fetchOrdersByProductCategory(ProductCategory.CLOTH);
+        orderStreamUtil.print(orderList);
+
+        /**
+         * --------------------sum------------------
+         * Exercise 14 -> total value of product belong to product category of cloth
+         */
+        double totalValue = streamDemo.ecommerceService.totalValueOfProductsByProductCategory(ProductCategory.CLOTH);
+        System.out.println("total value of product belong to product category of cloth " + totalValue);
+
+        /**
+         * --------------------summaryStatistic------------------
+         * Exercise 14 -> total value of product belong to product category of cloth
+         */
+        DoubleSummaryStatistics doubleSummaryStatistics = streamDemo.ecommerceService.productPriceStatistic();
+        System.out.println("total value of product belong to product category of cloth " + doubleSummaryStatistics);
 
     }
 }

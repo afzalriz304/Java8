@@ -2,7 +2,6 @@ package com.java8Features.utils;
 
 import com.java8Features.enums.OrderStatus;
 import com.java8Features.enums.ProductCategory;
-import com.java8Features.models.Employee;
 import com.java8Features.models.ecommerce.Customer;
 import com.java8Features.models.ecommerce.Order;
 import com.java8Features.models.ecommerce.Product;
@@ -12,15 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 public class ModelUtil {
-
-    public static List<Employee> fetchEmployeeList() {
-        Employee employee1 = new Employee(01, "emp01", "SE-1");
-        Employee employee2 = new Employee(02, "emp02", "SE-2");
-        Employee employee3 = new Employee(03, "emp03", "SE-2");
-        Employee employee4 = new Employee(04, "emp04", "SE-3");
-        return Arrays.asList(employee1, employee2, employee3, employee4);
-    }
-
     public static List<Product> createProductsList1() {
         Product product1 = new Product(1L, "prod1", ProductCategory.CLOTH, 600);
         Product product2 = new Product(2L, "prod2", ProductCategory.ELECTRONIC, 6000);

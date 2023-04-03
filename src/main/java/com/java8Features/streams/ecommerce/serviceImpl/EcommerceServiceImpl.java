@@ -8,6 +8,7 @@ import com.java8Features.streams.ecommerce.service.EcommerceService;
 import com.java8Features.utils.ModelUtil;
 
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -101,6 +102,12 @@ public class EcommerceServiceImpl implements EcommerceService {
     }
 
     @Override
+    public Optional<Product> fetchHighestPriceProductFromList() {
+        return originalProductList.stream()
+                .max(Comparator.comparing(Product::getPrice));
+    }
+
+    @Override
     public List<Product> sortProductByPrice() {
         return originalProductList.stream()
                 .sorted(Comparator.comparing(Product::getPrice))
@@ -115,6 +122,36 @@ public class EcommerceServiceImpl implements EcommerceService {
                 .flatMap(order -> order.getProductList().stream())
                 .collect(Collectors.toList())
                 .stream().forEach(System.out::println);
+    }
+
+    @Override
+    public List<Order> fetchOrdersByProductCategory(ProductCategory productCategory) {
+        return originalOrderList.stream()
+                .filter(order -> order.getProductList()
+                        .stream()
+                        .anyMatch(product -> product.getCategory().equals(productCategory))
+                ).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isProductCategoryPresent(ProductCategory productCategory) {
+        return originalProductList.stream()
+                .anyMatch(product -> product.getCategory().equals(productCategory));
+    }
+
+    @Override
+    public double totalValueOfProductsByProductCategory(ProductCategory productCategory) {
+        return originalProductList.stream()
+                .filter(product -> product.getCategory().equals(productCategory))
+                .mapToDouble(Product::getPrice)
+                .sum();
+    }
+
+    @Override
+    public DoubleSummaryStatistics productPriceStatistic() {
+        return originalProductList.stream()
+                .mapToDouble(Product::getPrice)
+                .summaryStatistics();
     }
 
 }
